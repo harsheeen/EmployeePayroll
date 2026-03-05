@@ -1,16 +1,17 @@
-package payroll;
-
 /*
  * ------------------ Payslip Class ------------------
  *
- * Represents a payslip for an employee.
- * Demonstrates composition (Employee + SalaryComponents).
+ * Final class to prevent inheritance.
+ * Implements Cloneable for shallow copy.
+ * Demonstrates equals() & hashCode() contract.
  */
-
+package payroll;
 
 import registration.Employee;
 
-public class Payslip {
+import java.util.Objects;
+
+public final class Payslip implements Cloneable {
     private Employee employee;
     private SalaryComponents salary;
 
@@ -19,15 +20,40 @@ public class Payslip {
         this.salary = salary;
     }
 
+    public Employee getEmployee() { return employee; }
+    public SalaryComponents getSalary() { return salary; }
+
     @Override
     public String toString() {
         return "\n=== PAYSLIP ===\n" +
                employee.toString() +
-               "\nBasic Salary : " + salary.getBasicSalary() +
-               "\nAllowances   : " + salary.getAllowances() +
-               "\nDeductions   : " + salary.getDeductions() +
-               "\nNet Salary   : " + salary.calculateNetSalary() +
+               "\nGross Salary   : " + salary.calculateGross() +
+               "\nNet Salary     : " + salary.calculateNet() +
                "\n====================\n";
     }
-}
 
+    // equals & hashCode contract
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Payslip)) return false;
+        Payslip payslip = (Payslip) o;
+        return Objects.equals(employee, payslip.employee) &&
+               Objects.equals(salary, payslip.salary);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employee, salary);
+    }
+
+    // Shallow clone
+    @Override
+    public Payslip clone() {
+        try {
+            return (Payslip) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Cloning failed", e);
+        }
+    }
+}

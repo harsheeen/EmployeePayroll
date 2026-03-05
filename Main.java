@@ -1,95 +1,124 @@
-/*
- * =============================================================
- * USE CASE 2: EMPLOYEE AUTHENTICATION & LOGIN
- * =============================================================
- *
- * Goal of this Use Case:
- * - Introduce inheritance and polymorphism
- * - Show how different user types share common behavior
- * - Demonstrate a simple authentication flow
- *
- * New ideas introduced here:
- * - Abstract class
- * - Method overriding
- * - Runtime decision-making
- *
- * This use case builds directly on UC1.
- *
- * @author Developer
- * @version 2.0
 
- */
 
-package com.payrollapp;
-import com.payrollapp.registration.*;
-import com.payrollapp.authentication.*;
+import registration.*;
+import authentication.*;
+import payroll.*;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-
 public class Main {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		Scanner sc = new Scanner(System.in);
-		System.out.println("=== USE CASE 1: EMPLOYEE REGISTRATION ===");
+        Scanner sc = new Scanner(System.in);
+        Employee emp = null;
 
-		try {
-			System.out.print("Enter Employee ID (EMP-XXXX): ");
-			String empId = sc.nextLine();
-			Validator.validateEmpId(empId);
+        // ============================
+        // UC1: Employee Registration
+        // ============================
+        System.out.println("=== USE CASE 1: EMPLOYEE REGISTRATION ===");
 
-			System.out.print("Enter Name: ");
-			String name = sc.nextLine();
+        try {
+            System.out.print("Enter Employee ID (EMP-XXXX): ");
+            String empId = sc.nextLine();
+            Validator.validateEmpId(empId);
 
-			System.out.print("Enter Email: ");
-			String email = sc.nextLine();
-			Validator.validateEmail(email);
+            System.out.print("Enter Name: ");
+            String name = sc.nextLine();
 
-			System.out.print("Enter Phone Number: ");
-			String phone = sc.nextLine();
-			Validator.validatePhone(phone);
+            System.out.print("Enter Email: ");
+            String email = sc.nextLine();
+            Validator.validateEmail(email);
 
-			System.out.print("Create Username: ");
-			String username = sc.nextLine();
+            System.out.print("Enter Phone Number: ");
+            String phone = sc.nextLine();
+            Validator.validatePhone(phone);
 
-			System.out.print("Create Password: ");
-			String password = sc.nextLine();
+            System.out.print("Create Username: ");
+            String username = sc.nextLine();
 
-			UserAccount ua = new UserAccount(username, password);
+            System.out.print("Create Password: ");
+            String password = sc.nextLine();
 
-			Employee emp = new Employee(empId, name, email, phone, ua);
+            UserAccount ua = new UserAccount(username, password);
+            emp = new Employee(empId, name, email, phone, ua);
 
-			emp.persist(); // save to file
+            emp.persist(); // save to file
 
-			System.out.println("\nEmployee Registered Successfully!\n");
-			System.out.println(emp);
+            System.out.println("\nEmployee Registered Successfully!\n");
+            System.out.println(emp);
 
-		} catch (ValidationException e) {
-			System.out.println("\nValidation Failed: " + e.getMessage());
-			return;
-		} catch (IOException e) {
-			System.out.println("\nError saving employee data!");
-			return;
-		}
+        } catch (ValidationException e) {
+            System.out.println("\nValidation Failed: " + e.getMessage());
+            return;
+        } catch (IOException e) {
+            System.out.println("\nError saving employee data!");
+            return;
+        }
 
+        // ============================
+        // UC2: Authentication & Login
+        // ============================
+        System.out.println("\n=== USE CASE 2: EMPLOYEE AUTHENTICATION & LOGIN ===");
 
-		System.out.println("=== USE CASE 2: EMPLOYEE AUTHENTICATION & LOGIN ===\n");
+        AuthenticationService auth = new AuthenticationService();
+        Session session = auth.login();
 
-		AuthenticationService auth = new AuthenticationService();
-		Session session = auth.login();
+        if (session == null || session.isExpired()) {
+            System.out.println("Login failed or session expired.");
+            return;
+        }
 
-		if (session != null) {
-			System.out.println("\n" + session);
-			if (!session.isExpired()) {
-				System.out.println("Session active and valid.");
-			} else {
-				System.out.println("Session expired. Please login again.");
-			}
-		}
+        System.out.println("\n" + session);
 
+        // ============================
+        // UC3: Salary Management
+        // ============================
+        System.out.println("\n=== USE CASE 3: SALARY MANAGEMENT ===");
 
-	}
+        System.out.print("Enter Basic Salary: ");
+        double basic = sc.nextDouble();
 
+        System.out.print("Enter Allowances: ");
+        double allowances = sc.nextDouble();
+
+        System.out.print("Enter PF Contribution: ");
+        double pf = sc.nextDouble();
+
+        System.out.print("Enter Tax: ");
+        double tax = sc.nextDouble();
+
+        System.out.print("Enter Other Deductions: ");
+        double deductions = sc.nextDouble();
+
+        PayrollService payrollService = new PayrollService();
+        SalaryComponents salary = payrollService.createSalaryStructure(basic, allowances, pf, tax, deductions);
+
+        Payslip payslip = payrollService.generatePayslip(emp, salary);
+        System.out.println(payslip);
+
+        // ============================
+        // UC4: Payslip Print / Download
+        // ============================
+        System.out.println("\n=== USE CASE 4: PAYSLIP PRINT / DOWNLOAD ===");
+
+        FileService fileService = new FileService();
+        try {
+            // Clone payslip to preserve original data integrity
+            Payslip payslipCopy = payslip.clone();
+
+            // Save as text format
+            DownloadToken token = fileService.savePayslip(payslipCopy, "txt");
+
+            System.out.println("Payslip saved as: " + token.getFilename());
+            System.out.println("Download valid until: " + token.getExpiry());
+
+            if (token.isExpired()) {
+                System.out.println("Download expired. Please regenerate.");
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving payslip: " + e.getMessage());
+        }
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * AuthenticationService handles login related operations. 
 */
-package com.payrollapp.authentication;
+package authentication;
 
 import java.util.*;
 import java.util.Scanner;

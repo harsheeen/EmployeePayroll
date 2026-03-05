@@ -1,5 +1,5 @@
 // * This class handles password hashing
-package com.payrollapp.authentication;
+package authentication;
 
 import java.security.MessageDigest;
 

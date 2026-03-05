@@ -1,7 +1,7 @@
 /*
  * Session represents a logged-in user state. 
 */
-package com.payrollapp.authentication;
+package authentication;
 
 public class Session {
     private final String username;

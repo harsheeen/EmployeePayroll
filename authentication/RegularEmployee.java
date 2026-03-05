@@ -1,4 +1,4 @@
-package com.payrollapp.authentication;
+package authentication;
 
 public class RegularEmployee extends User {
     public RegularEmployee(String username, String password) {

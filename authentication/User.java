@@ -2,7 +2,7 @@
  * Abstract User Class
  * User represents a generic system user 
 */
-package com.payrollapp.authentication;
+package authentication;
 
 public abstract class User {
     protected String username;

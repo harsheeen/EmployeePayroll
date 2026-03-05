@@ -8,7 +8,7 @@
  *
  * Data is kept private and controlled through the class.
 */
-package com.payrollapp.registration;
+package registration;
 
 import java.io.FileWriter;
 import java.io.IOException;

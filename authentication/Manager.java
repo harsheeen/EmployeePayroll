@@ -1,4 +1,4 @@
-package com.payrollapp.authentication;
+package authentication;
 
 public class Manager extends User {
     public Manager(String username, String password) {
