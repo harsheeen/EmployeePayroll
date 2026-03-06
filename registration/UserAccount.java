@@ -10,7 +10,7 @@
  * This introduces the idea of COMPOSITION:
  * - An Employee HAS a UserAccount
 */
-package registration;
+package com.payrollapp.registration;
 
 public class UserAccount {
     private String username;

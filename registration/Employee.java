@@ -8,7 +8,7 @@
  *
  * Data is kept private and controlled through the class.
 */
-package registration;
+package com.payrollapp.registration;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,6 +28,11 @@ public class Employee {
         this.phone = phone;
         this.account = account;
     }
+    
+
+     public String getEmpId() { return empId; }
+     public String getName() { return name; }
+
 
     @Override
     public String toString() {

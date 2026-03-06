@@ -1,25 +1,31 @@
-package payroll;
+package com.payrollapp.payroll;
+
+import com.payrollapp.registration.Employee;
 
 /*
- * ------------------ PayrollService Class ------------------
- *
- * Handles salary updates and payslip generation.
+ * PayrollService performs salary calculations.
+ * Separates business logic from data classes.
  */
-
-import registration.Employee;
-
 public class PayrollService {
 
-    public Payslip generatePayslip(Employee emp, SalaryComponents salary) {
-        return new Payslip(emp, salary);
-    }
+    public Payslip generatePayslip(Employee employee,
+                                   double base,
+                                   double hra,
+                                   double allowances,
+                                   String month) {
 
-    public SalaryComponents createSalaryStructure(double basic, double allowances, double pf, double tax, double deductions) {
-        return new SalaryComponents()
-                .setBasicSalary(basic)
-                .setAllowances(allowances)
-                .setPf(pf)
-                .setTax(tax)
-                .setDeductions(deductions);
+        SalaryComponents sc = new SalaryComponents(base, hra, allowances);
+
+        // Gross Salary
+        double gross = base + hra + allowances;
+
+        // Deductions
+        sc.pf = base * 0.12;   // 12% PF
+        sc.tax = gross * 0.10; // 10% tax
+
+        // Net Pay
+        sc.netPay = gross - (sc.pf + sc.tax);
+
+        return new Payslip(employee, sc, month);
     }
 }

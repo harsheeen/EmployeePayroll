@@ -11,7 +11,7 @@
  * - Validation logic does not belong to employee
  * - Validation happens before objects are created
  */
-package registration;
+package com.payrollapp.registration;
 import java.util.regex.*;
 
 public class Validator {

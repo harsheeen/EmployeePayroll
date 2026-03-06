@@ -1,59 +1,54 @@
+package com.payrollapp.payroll;
+
+import com.payrollapp.registration.Employee;
+
 /*
- * ------------------ Payslip Class ------------------
- *
- * Final class to prevent inheritance.
- * Implements Cloneable for shallow copy.
- * Demonstrates equals() & hashCode() contract.
+ * Payslip represents a monthly salary statement.
+ * Aggregates Employee and SalaryComponents.
  */
-package payroll;
+public class Payslip  implements Cloneable{
 
-import registration.Employee;
+    private Employee employee;          // Aggregation
+    private SalaryComponents components; // Composition
+    private String month;
 
-import java.util.Objects;
-
-public final class Payslip implements Cloneable {
-    private Employee employee;
-    private SalaryComponents salary;
-
-    public Payslip(Employee employee, SalaryComponents salary) {
+    public Payslip(Employee employee, SalaryComponents components, String month) {
         this.employee = employee;
-        this.salary = salary;
+        this.components = components;
+        this.month = month;
     }
-
-    public Employee getEmployee() { return employee; }
-    public SalaryComponents getSalary() { return salary; }
 
     @Override
     public String toString() {
-        return "\n=== PAYSLIP ===\n" +
-               employee.toString() +
-               "\nGross Salary   : " + salary.calculateGross() +
-               "\nNet Salary     : " + salary.calculateNet() +
-               "\n====================\n";
-    }
 
-    // equals & hashCode contract
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Payslip)) return false;
-        Payslip payslip = (Payslip) o;
-        return Objects.equals(employee, payslip.employee) &&
-               Objects.equals(salary, payslip.salary);
-    }
+        return "\n========= PAYSLIP =========\n" +
+                "Month : " + month + "\n\n" +
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(employee, salary);
-    }
+                "Employee Details\n" +
+                "----------------\n" +
+                employee + "\n\n" +
 
-    // Shallow clone
+                "Earnings\n" +
+                "-------\n" +
+                "Base Salary : " + components.baseSalary + "\n" +
+                "HRA         : " + components.hra + "\n" +
+                "Allowances  : " + components.allowances + "\n\n" +
+
+                "Deductions\n" +
+                "----------\n" +
+                "PF  : " + components.pf + "\n" +
+                "Tax : " + components.tax + "\n\n" +
+
+                "Net Pay : " + components.netPay + "\n" +
+                "===========================\n";
+    }
+    
     @Override
-    public Payslip clone() {
+    public Object clone() {
         try {
-            return (Payslip) super.clone();
+            return super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Cloning failed", e);
+            return null;
         }
     }
 }

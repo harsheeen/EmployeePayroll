@@ -11,7 +11,7 @@
  * "A special error we throw when input is invalid"
 */
 
-package registration;
+package com.payrollapp.registration;
 
 public class ValidationException extends Exception{
 
